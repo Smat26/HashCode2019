@@ -79,12 +79,12 @@ class Slide():
 def create_slideshow_from_slides(slides):
     slides.sort(key = lambda x: len(x.tags))
     new_slides = []
-    
+    potential_match = slides.pop()
     while slides:
         i = 0
-        highest_score = 0
-        candidate = slides.pop()
-        potential_match = None
+        highest_score = -1
+        candidate = potential_match
+        new_slides.append(candidate)
         for index, slide in enumerate(slides):
             i = i + 1
             score = candidate.calculate_interest(slide)
@@ -92,15 +92,12 @@ def create_slideshow_from_slides(slides):
                 highest_score = score
                 potential_match = slide
                 potential_index = index
-            if i > 200:
+            if i > 100:
                 break
         if potential_match:
-            new_slides.append(candidate)
-            new_slides.append(potential_match)
+            # new_slides.append(potential_match)
             slides.remove(potential_match)
 
-
-        
     return Slideshow(new_slides)
 
 def merged_vertical(new_vertical, vertical_photos):
@@ -131,13 +128,14 @@ def create_slides_from_photos(photos):
                 vertical_photos.pop(matched_photo)
             else:
                 vertical_photos.append(new_vertical)
-    while len(vertical_photos) > 2:
+    while len(vertical_photos) > 1:
         first_photo = vertical_photos.pop()
         second_photo = vertical_photos.pop()
         index, tags = force_merged(first_photo,second_photo)
         slide = Slide(tags,index)
         slides.append(slide)
-
+        
+    print "Total Slides: ",len(slides)
     return slides 
 
 def parse_input(line):
@@ -154,6 +152,7 @@ def read_file(filename):
             orientation, no_of_tags, tags = parse_input(line)
             photo = Photo(orientation, no_of_tags, tags)
             photos.append(photo)
+    print 'Total Photos:', len(photos)
     return photos
                                                                           
 
