@@ -46,7 +46,7 @@ class Slideshow():
     def spawnPopulation(self, parent, populationCount):
         newPopulation = []
         while len(newPopulation) < populationCount:
-            tempPopulation = list(parent)
+            tempPopulation = parent.copy()
             indexA = random.randint(0,len(tempPopulation) - 1)
             indexB = random.randint(0,len(tempPopulation) - 1)
             tempPopulation[indexA], tempPopulation[indexB] = tempPopulation[indexB], tempPopulation[indexA]
@@ -79,7 +79,7 @@ class Slideshow():
             print("Generation: " + str(generation_count) + " out of " + str(total_generations))
             print("Total Score: " + str(self.calculateFitness(parent)))
         
-        self.slides = parent
+        self.sli
 
         return self
 
@@ -142,7 +142,7 @@ def read_file(filename):
 
 def main():
     if len(sys.argv) < 2:
-        print 'Enter input_file name'
+        print ('Enter input_file name')
         sys.exit(1)
     photos = read_file(sys.argv[1]) # photo is an array of Photos
     slides = create_slides_from_photos(photos) # slides is array of slides (any order)
@@ -189,7 +189,7 @@ def create_slides_from_photos(photos):
         slide = Slide(tags,index)
         slides.append(slide)
         
-    print "Total Slides: ",len(slides)
+    print ("Total Slides: ",len(slides))
     return slides 
 
 if __name__ == "__main__":
