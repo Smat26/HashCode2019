@@ -49,7 +49,14 @@ class Slideshow():
                 # print slide.index
                 slide = ' '.join([str(x) for x in slide.index])
                 fd.write(slide + '\n')
-    
+
+    def calculate_score_after_swap(first_index,second_index):
+        score =  this.slides[first_index].calculate_interest(this.slides[first_index+1])
+        score += this.slides[first_index].calculate_interest(this.slides[first_index-1])
+        score +=  this.slides[second_index].calculate_interest(this.slides[second_index+1])
+        score += this.slides[second_index].calculate_interest(this.slides[second_index-1])
+        return score
+
         
 
 class Slide():
@@ -108,19 +115,13 @@ def handle_weak_slides(weak_slides, the_slideshow):
     print 'Swapping weak slides'
     while weak_slides:
         for potential_swap in weak_slides:
-            prev_score =  the_slideshow.slides[candidate].calculate_interest(the_slideshow.slides[candidate+1])
-            prev_score += the_slideshow.slides[candidate].calculate_interest(the_slideshow.slides[candidate-1])
-            prev_score +=  the_slideshow.slides[potential_swap].calculate_interest(the_slideshow.slides[potential_swap+1])
-            prev_score += the_slideshow.slides[potential_swap].calculate_interest(the_slideshow.slides[potential_swap-1])
+            prev_score = the_slideshow.calculate_score_after_swap(potential_swap, candidate)
             the_slideshow = swap_slide(candidate,potential_swap,the_slideshow)
-            new_score =  the_slideshow.slides[candidate].calculate_interest(the_slideshow.slides[candidate+1])
-            new_score += the_slideshow.slides[candidate].calculate_interest(the_slideshow.slides[candidate-1])
-            new_score +=  the_slideshow.slides[potential_swap].calculate_interest(the_slideshow.slides[potential_swap+1])
-            new_score += the_slideshow.slides[potential_swap].calculate_interest(the_slideshow.slides[potential_swap-1])
+            new_score = the_slideshow.calculate_score_after_swap(potential_swap, candidate)
             if new_score < prev_score:
-                swapped = True
                 the_slideshow = swap_slide(candidate,potential_swap, the_slideshow)
             else:
+                swapped = True
                 print 'swapped'
                 break
         if swapped:
@@ -220,7 +221,8 @@ def read_file(filename):
             photos.append(photo)
     print 'Total Photos:', len(photos)
     return photos
-                                                                          
+
+                                                  
 
 def main():
     if len(sys.argv) < 2:
